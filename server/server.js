@@ -17,16 +17,17 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
    console.log('New user connected');
 
-   socket.emit('newMessage', {
-       from: 'Danny Park',
-       text: 'See you then',
-       createdAt: 131233
+   socket.on('createMessage', (message) => {
+       console.log('createMessage', message);
+       //io is for every single connection
+       io.emit('newMessage', {
+           from: message.from,
+           text: message.text,
+           createdAt: new Date().getTime()
+       })
    });
 
-   socket.on('createMessage', (createMessage) => {
-       console.log('createMessage', createMessage);
-   });
-
+    //socket is for single connection
    socket.on('disconnect', () => {
       console.log('User was disconnected');
    });
