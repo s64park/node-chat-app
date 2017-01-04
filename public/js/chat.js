@@ -20,12 +20,13 @@ function scrollToBottom() {
 
 socket.on('connect', function() {
     var params = jQuery.deparam(window.location.search);
-    socket.emit('join', params, function(err) {
+    socket.emit('join', params, function(err, user) {
        if (err) {
            alert(err);
            window.location.href = '/';
        } else {
-           console.log('No error');
+           var h3 = jQuery('#chat__sidebar-name');
+           h3.text(user.room);
        }
     });
 });

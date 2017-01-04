@@ -12,8 +12,12 @@ class Users {
         this.users = [];
     }
     addUser(id, name, room) {
-        var user = {id, name, room};
-        this.users.push(user);
+        var isUserExist = this.users.filter(user => user.name === name);
+        var user;
+        if(isUserExist.length === 0) {
+            user = { id, name, room };
+            this.users.push(user);
+        }
         return user;
     }
     removeUser(id) {
@@ -26,7 +30,6 @@ class Users {
 
     getUser(id) {
         return this.users.filter((user) => user.id === id)[0];
-
     }
 
     getUserList(room) {

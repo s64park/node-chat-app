@@ -24,15 +24,21 @@ io.on('connection', (socket) => {
         if (!isRealString(params.name) || !isRealString(params.room)) {
             return callback('Name and room name are required.');
         }
+        //Case insensitive
+        params.room = params.room.toLowerCase()
         socket.join(params.room);
-        users.removeUser(socket.id);
-        users.addUser(socket.id, params.name, params.room);
+        var user = users.addUser(socket.id, params.name, params.room);
+        if(user) {
+            io.to(params.room).emit('updateUserList', users.getUserList(params.room));
+            socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
+            socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined` ));
 
-        io.to(params.room).emit('updateUserList', users.getUserList(params.room));
-        socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
-        socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined` ));
+            callback(null, user);
+        } else {
+            callback(`Please choose different display name to join ${params.room}`);
+        }
 
-        callback();
+
     });
 
    socket.on('createMessage', (message, callback) => {
