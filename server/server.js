@@ -27,12 +27,7 @@ io.on('connection', (socket) => {
        console.log('createMessage', message);
        //io is for every single connection
        io.emit('newMessage', generateMessage(message.from, message.text));
-       callback('This is from the server.');
-       /*socket.broadcast.emit('newMessage', {
-           from: message.from,
-           text: message.text,
-           createdAt: new Date().getTime()
-       })*/
+       callback();
    });
 
    socket.on('createLocationMessage', (coords) => {
